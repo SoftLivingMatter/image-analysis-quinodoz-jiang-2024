@@ -1,0 +1,235 @@
+CellProfiler Pipeline: http://www.cellprofiler.org
+Version:5
+DateRevision:426
+GitHash:
+ModuleCount:15
+HasImagePlaneDetails:False
+
+Images:[module_num:1|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['To begin creating your project, use the Images module to compile a list of files and/or folders that you want to analyze. You can also specify a set of rules to include only the desired files in your selected folders.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    :
+    Filter images?:Images only
+    Select the rule criteria:and (extension does isimage) (directory doesnot containregexp "[\\\\/]\\.")
+
+Metadata:[module_num:2|svn_version:'Unknown'|variable_revision_number:6|show_window:False|notes:['The Metadata module optionally allows you to extract information describing your images (i.e, metadata) which will be stored along with your measurements. This information can be contained in the file name and/or location, or in an external file.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Extract metadata?:Yes
+    Metadata data type:Text
+    Metadata types:{}
+    Extraction method count:1
+    Metadata extraction method:Extract from image file headers
+    Metadata source:File name
+    Regular expression to extract from file name:^(?P<Plate>.*)_(?P<Well>[A-P][0-9]{2})_s(?P<Site>[0-9])_w(?P<ChannelNumber>[0-9])
+    Regular expression to extract from folder name:(?P<Date>[0-9]{4}_[0-9]{2}_[0-9]{2})$
+    Extract metadata from:All images
+    Select the filtering criteria:and (file does contain "")
+    Metadata file location:Elsewhere...|
+    Match file and image metadata:[]
+    Use case insensitive matching?:No
+    Metadata file name:None
+    Does cached metadata exist?:Yes
+
+NamesAndTypes:[module_num:3|svn_version:'Unknown'|variable_revision_number:8|show_window:False|notes:['The NamesAndTypes module allows you to assign a meaningful name to each image by which other modules will refer to it.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Assign a name to:All images
+    Select the image type:Color image
+    Name to assign these images:Input
+    Match metadata:[]
+    Image set matching method:Order
+    Set intensity range from:Image metadata
+    Assignments count:1
+    Single images count:0
+    Maximum intensity:255.0
+    Process as 3D?:No
+    Relative pixel spacing in X:1.0
+    Relative pixel spacing in Y:1.0
+    Relative pixel spacing in Z:1.0
+    Select the rule criteria:and (file does contain "")
+    Name to assign these images:DNA
+    Name to assign these objects:Cell
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Maximum intensity:255.0
+
+Groups:[module_num:4|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['The Groups module optionally allows you to split your list of images into image subsets (groups) which will be processed independently of each other. Examples of groupings include screening batches, microtiter plates, time-lapse movies, etc.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Do you want to group your images?:No
+    grouping metadata count:1
+    Metadata category:None
+
+ColorToGray:[module_num:5|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Split and name channels, update to match experimental conditions.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:Input
+    Conversion method:Split
+    Image type:Channels
+    Name the output image:OrigGray
+    Relative weight of the red channel:1.0
+    Relative weight of the green channel:1.0
+    Relative weight of the blue channel:1.0
+    Convert red to gray?:Yes
+    Name the output image:OrigRed
+    Convert green to gray?:Yes
+    Name the output image:OrigGreen
+    Convert blue to gray?:Yes
+    Name the output image:OrigBlue
+    Convert hue to gray?:Yes
+    Name the output image:OrigHue
+    Convert saturation to gray?:Yes
+    Name the output image:OrigSaturation
+    Convert value to gray?:Yes
+    Name the output image:OrigValue
+    Channel count:4
+    Channel number:1
+    Relative weight of the channel:1.0
+    Image name:plasmid_28S
+    Channel number:2
+    Relative weight of the channel:1.0
+    Image name:DFC
+    Channel number:3
+    Relative weight of the channel:1.0
+    Image name:plasmid_star_raw
+    Channel number:4
+    Relative weight of the channel:1.0
+    Image name:GC
+
+RunCellpose:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Find nulcei from the inverted, 28S intensity image.  28S accumulates in the cytoplasm, which highlights nuclei upon inversion.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:plasmid_28S
+    Run CellPose in docker or local python environment:Python
+    Select Cellpose docker image:cellprofiler/runcellpose_with_pretrained:0.1
+    Expected object diameter:300
+    Detection mode:nuclei
+    Name the output object:NucleiRaw
+    Use GPU:No
+    Use averaging:No
+    Supply nuclei image as well?:No
+    Select the nuclei image:None
+    Save probability image?:No
+    Name the probability image:Probabilities
+    Location of the pre-trained model file:Elsewhere...|
+    Pre-trained model file name:cyto_0
+    Flow threshold:0.4
+    Cell probability threshold:0.0
+    GPU memory share for each worker:0.1
+    Stitch Threshold:0.0
+    Use 3D:No
+    Minimum size:150
+    Use Omnipose for mask reconstruction:No
+    Invert images:Yes
+    Remove objects that are touching the edge?:Yes
+
+RunCellpose:[module_num:7|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Find cytoplasm from the 28S image directly.  Functions well if cells are separated or have higher cytoplasmic intensity']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:plasmid_28S
+    Run CellPose in docker or local python environment:Python
+    Select Cellpose docker image:cellprofiler/runcellpose_with_pretrained:0.1
+    Expected object diameter:500
+    Detection mode:cyto2
+    Name the output object:CellsRaw
+    Use GPU:No
+    Use averaging:No
+    Supply nuclei image as well?:No
+    Select the nuclei image:None
+    Save probability image?:No
+    Name the probability image:Probabilities
+    Location of the pre-trained model file:Elsewhere...|
+    Pre-trained model file name:cyto_0
+    Flow threshold:0.4
+    Cell probability threshold:0.0
+    GPU memory share for each worker:0.1
+    Stitch Threshold:0.0
+    Use 3D:No
+    Minimum size:150
+    Use Omnipose for mask reconstruction:No
+    Invert images:No
+    Remove objects that are touching the edge?:Yes
+
+MaskObjects:[module_num:8|svn_version:'Unknown'|variable_revision_number:3|show_window:True|notes:['This and the following module filter cells and nuclei to ensure each cell has a nucleus, and each nucleus is within a cell.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+    Select objects to be masked:CellsRaw
+    Name the masked objects:Cell
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:NucleiRaw
+    Select the masking image:None
+    Handling of objects that are partially masked:Remove depending on overlap
+    Fraction of object that must overlap:0.10
+    Numbering of resulting objects:Retain
+    Invert the mask?:No
+
+MaskObjects:[module_num:9|svn_version:'Unknown'|variable_revision_number:3|show_window:True|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:NucleiRaw
+    Name the masked objects:Nuclei
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:Cell
+    Select the masking image:None
+    Handling of objects that are partially masked:Remove depending on overlap
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Retain
+    Invert the mask?:No
+
+MaskObjects:[module_num:10|svn_version:'Unknown'|variable_revision_number:3|show_window:True|notes:['Estimate the cytoplasmic region by removing nuclei from cells.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to be masked:Cell
+    Name the masked objects:Cytoplasm
+    Mask using a region defined by other objects or by binary image?:Objects
+    Select the masking object:Nuclei
+    Select the masking image:None
+    Handling of objects that are partially masked:Keep overlapping region
+    Fraction of object that must overlap:0.5
+    Numbering of resulting objects:Retain
+    Invert the mask?:Yes
+
+MeasureImageIntensity:[module_num:11|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Measure the 5 percentile intenisty of the star_plasmid image for use in background subtraction.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:plasmid_star_raw
+    Measure the intensity only from areas enclosed by objects?:No
+    Select input object sets:
+    Calculate custom percentiles:Yes
+    Specify percentiles to measure:5
+
+ImageMath:[module_num:12|svn_version:'Unknown'|variable_revision_number:5|show_window:True|notes:['Background subtract the 5 percentile intensity value from the raw plasmid star image.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Operation:Subtract
+    Raise the power of the result by:1.0
+    Multiply the result by:1.0
+    Add to result:0.0
+    Set values less than 0 equal to 0?:Yes
+    Set values greater than 1 equal to 1?:Yes
+    Replace invalid values with 0?:Yes
+    Ignore the image masks?:No
+    Name the output image:plasmid_star
+    Image or measurement?:Image
+    Select the first image:plasmid_star_raw
+    Multiply the first image by:1.0
+    Measurement:
+    Image or measurement?:Measurement
+    Select the second image:None
+    Multiply the second image by:1.0
+    Measurement:Intensity_Percentile_5_plasmid_star_raw
+
+MeasureObjectIntensity:[module_num:13|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Measure the 28S and star plasmid intensity values in the entire cell, cytoplasm, and nucleus.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:plasmid_28S, plasmid_star
+    Select objects to measure:Cell, Cytoplasm, Nuclei
+
+RelateObjects:[module_num:14|svn_version:'Unknown'|variable_revision_number:5|show_window:True|notes:['Relate the nuclei to the parent cell.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Parent objects:Cell
+    Child objects:Nuclei
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:No
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:RelateObjects
+    Parent name:None
+
+ExportToSpreadsheet:[module_num:15|svn_version:'Unknown'|variable_revision_number:13|show_window:True|notes:['Save csv for later processing in python.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the column delimiter:Comma (",")
+    Add image metadata columns to your object data file?:No
+    Add image file and folder names to your object data file?:No
+    Select the measurements to export:No
+    Calculate the per-image mean values for object measurements?:No
+    Calculate the per-image median values for object measurements?:No
+    Calculate the per-image standard deviation values for object measurements?:No
+    Output file location:Default Output Folder|
+    Create a GenePattern GCT file?:No
+    Select source of sample row name:Metadata
+    Select the image to use as the identifier:None
+    Select the metadata to use as the identifier:None
+    Export all measurement types?:Yes
+    Press button to select measurements:
+    Representation of Nan/Inf:NaN
+    Add a prefix to file names?:No
+    Filename prefix:MyExpt_
+    Overwrite existing files without warning?:Yes
+    Data to export:Do not use
+    Combine these object measurements with those of the previous object?:No
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
