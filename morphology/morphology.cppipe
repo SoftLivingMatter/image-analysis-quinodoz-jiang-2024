@@ -95,16 +95,16 @@ ColorToGray:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_
     Image name:Probe
     Channel number:2
     Relative weight of the channel:1.0
-    Image name:DFC
+    Image name:NOP56
     Channel number:3
     Relative weight of the channel:1.0
-    Image name:FC
+    Image name:RPA194
     Channel number:4
     Relative weight of the channel:1.0
-    Image name:GC
+    Image name:NPM1
 
 IdentifyPrimaryObjects:[module_num:7|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find GC within the input image.  Parameters tuned to pick out GC with varying intensity across cells.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:GC
+    Select the input image:NPM1
     Name the primary objects to be identified:InitialGC
     Typical diameter of objects, in pixel units (Min,Max):30,400
     Discard objects outside the diameter range?:Yes
@@ -158,16 +158,16 @@ DilateObjects:[module_num:9|svn_version:'Unknown'|variable_revision_number:1|sho
     Structuring element:disk,50
 
 MaskImage:[module_num:10|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Mask FC image with dilated GC mask.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:FC
-    Name the output image:MaskFC
+    Select the input image:RPA194
+    Name the output image:MaskRPA194
     Use objects or an image as a mask?:Objects
     Select object for mask:DilatedGC
     Select image for mask:None
     Invert the mask?:No
 
 EnhanceOrSuppressFeatures:[module_num:11|svn_version:'Unknown'|variable_revision_number:7|show_window:False|notes:['Highlight FCs with diameter around 20 pixels, improves FC finding in next step.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:MaskFC
-    Name the output image:EnhancedFC
+    Select the input image:MaskRPA194
+    Name the output image:EnhancedRPA194
     Select the operation:Enhance
     Feature size:20
     Feature type:Speckles
@@ -180,7 +180,7 @@ EnhanceOrSuppressFeatures:[module_num:11|svn_version:'Unknown'|variable_revision
     Rescale result image:No
 
 IdentifyPrimaryObjects:[module_num:12|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find FCs.  Parameters adjusted to pick out most FCs']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:EnhancedFC
+    Select the input image:EnhancedRPA194
     Name the primary objects to be identified:InitialFC
     Typical diameter of objects, in pixel units (Min,Max):7,50
     Discard objects outside the diameter range?:Yes
@@ -227,16 +227,16 @@ MaskObjects:[module_num:13|svn_version:'Unknown'|variable_revision_number:3|show
     Invert the mask?:Yes
 
 MaskImage:[module_num:14|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Mask DFC image by dilated GC for thresholding DFC in next step.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:DFC
-    Name the output image:MaskDFC
+    Select the input image:NOP56
+    Name the output image:MaskNOP56
     Use objects or an image as a mask?:Objects
     Select object for mask:DilatedGC
     Select image for mask:None
     Invert the mask?:No
 
 Threshold:[module_num:15|svn_version:'Unknown'|variable_revision_number:12|show_window:False|notes:['Find DFCs with adaptive Otsu']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:MaskDFC
-    Name the output image:ThresholdDFC
+    Select the input image:MaskNOP56
+    Name the output image:ThresholdNOP56
     Threshold strategy:Adaptive
     Thresholding method:Minimum Cross-Entropy
     Threshold smoothing scale:0.0
@@ -256,7 +256,7 @@ Threshold:[module_num:15|svn_version:'Unknown'|variable_revision_number:12|show_
     Thresholding method:Otsu
 
 ConvertImageToObjects:[module_num:16|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:['Convert the threshold image to objects for further processing']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:ThresholdDFC
+    Select the input image:ThresholdNOP56
     Name the output object:DFCObjectsRaw
     Convert to boolean image:Yes
     Preserve original labels:No
@@ -308,7 +308,7 @@ ConvertObjectsToImage:[module_num:21|svn_version:'Unknown'|variable_revision_num
     Select the colormap:Default
 
 MeasureObjectIntensityDistribution:[module_num:22|svn_version:'Unknown'|variable_revision_number:6|show_window:True|notes:['Measure intensity distribution of DFC and FC for estimating rim enrichment.  Measure the binary GC object image to estimate the area of each bin and allow combining adjacent bins in python.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC, FC, GCObjectImage
+    Select images to measure:GCObjectImage, NOP56, RPA194
     Hidden:1
     Hidden:1
     Hidden:0
@@ -353,7 +353,7 @@ ConvertImageToObjects:[module_num:24|svn_version:'Unknown'|variable_revision_num
     Connectivity:0
 
 MeasureColocalization:[module_num:25|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:['Calculate correlation of each component over the combined phases.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC, FC, GC, Probe
+    Select images to measure:NOP56, NPM1, Probe, RPA194
     Set threshold as percentage of maximum intensity for the images:15.0
     Select where to measure correlation:Within objects
     Select objects to measure:CombinedObjects
@@ -370,12 +370,12 @@ MeasureObjectSizeShape:[module_num:26|svn_version:'Unknown'|variable_revision_nu
     Calculate the Zernike features?:No
     Calculate the advanced features?:No
 
-MeasureObjectIntensity:[module_num:27|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure FC intensity in FCs']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:FC, Probe
+MeasureObjectIntensity:[module_num:27|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure RPA194 intensity in FCs']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:Probe, RPA194
     Select objects to measure:InitialFC
 
-MeasureObjectIntensity:[module_num:28|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure DFC, GC and Probe intensity in initial GC area']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC, GC, Probe
+MeasureObjectIntensity:[module_num:28|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure NOP56, NPM1 and Probe intensity in initial GC area']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select images to measure:NOP56, NPM1, Probe
     Select objects to measure:DFCObjects, InitialGC
 
 RelateObjects:[module_num:29|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:['Relate all objects back to merged, dilated GC for analysis']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]

@@ -95,16 +95,16 @@ ColorToGray:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_
     Image name:Probe
     Channel number:2
     Relative weight of the channel:1.0
-    Image name:DFC
+    Image name:NOP56
     Channel number:3
     Relative weight of the channel:1.0
-    Image name:FC
+    Image name:RPA194
     Channel number:4
     Relative weight of the channel:1.0
-    Image name:GC
+    Image name:NPM1
 
 IdentifyPrimaryObjects:[module_num:7|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find GC within the input image.  Parameters tuned to pick out GC with varying intensity across cells.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:GC
+    Select the input image:NPM1
     Name the primary objects to be identified:InitialGC
     Typical diameter of objects, in pixel units (Min,Max):30,400
     Discard objects outside the diameter range?:Yes
@@ -158,16 +158,16 @@ DilateObjects:[module_num:9|svn_version:'Unknown'|variable_revision_number:1|sho
     Structuring element:disk,50
 
 MaskImage:[module_num:10|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Mask FC image with dilated GC mask.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:FC
-    Name the output image:MaskFC
+    Select the input image:RPA194
+    Name the output image:MaskRPA194
     Use objects or an image as a mask?:Objects
     Select object for mask:DilatedGC
     Select image for mask:None
     Invert the mask?:No
 
 EnhanceOrSuppressFeatures:[module_num:11|svn_version:'Unknown'|variable_revision_number:7|show_window:False|notes:['Highlight FCs with diameter around 20 pixels, improves FC finding in next step.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:MaskFC
-    Name the output image:EnhancedFC
+    Select the input image:MaskRPA194
+    Name the output image:EnhancedRPA194
     Select the operation:Enhance
     Feature size:20
     Feature type:Speckles
@@ -180,7 +180,7 @@ EnhanceOrSuppressFeatures:[module_num:11|svn_version:'Unknown'|variable_revision
     Rescale result image:No
 
 IdentifyPrimaryObjects:[module_num:12|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find FCs.  Parameters adjusted to pick out most in plane FCs']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:EnhancedFC
+    Select the input image:EnhancedRPA194
     Name the primary objects to be identified:InitialFC
     Typical diameter of objects, in pixel units (Min,Max):7,50
     Discard objects outside the diameter range?:Yes

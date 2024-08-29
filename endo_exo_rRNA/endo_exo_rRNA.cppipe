@@ -79,16 +79,16 @@ ColorToGray:[module_num:5|svn_version:'Unknown'|variable_revision_number:4|show_
     Image name:FiveETS_raw
     Channel number:2
     Relative weight of the channel:1.0
-    Image name:GC
+    Image name:NPM1
     Channel number:3
     Relative weight of the channel:1.0
     Image name:plasmidStar_raw
     Channel number:4
     Relative weight of the channel:1.0
-    Image name:DFC_raw
+    Image name:NOP56_raw
 
 MeasureImageIntensity:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:["Measure DFC, 5'-ETS, and plasmid intensities for background subtraction."]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC_raw, FiveETS_raw, plasmidStar_raw
+    Select images to measure:FiveETS_raw, NOP56_raw, plasmidStar_raw
     Measure the intensity only from areas enclosed by objects?:No
     Select input object sets:
     Calculate custom percentiles:Yes
@@ -103,15 +103,15 @@ ImageMath:[module_num:7|svn_version:'Unknown'|variable_revision_number:5|show_wi
     Set values greater than 1 equal to 1?:Yes
     Replace invalid values with 0?:Yes
     Ignore the image masks?:No
-    Name the output image:DFC
+    Name the output image:NOP56
     Image or measurement?:Image
-    Select the first image:DFC_raw
+    Select the first image:NOP56_raw
     Multiply the first image by:1.0
     Measurement:
     Image or measurement?:Measurement
     Select the second image:None
     Multiply the second image by:1.0
-    Measurement:Intensity_Percentile_5_DFC_raw
+    Measurement:Intensity_Percentile_5_NOP56_raw
 
 ImageMath:[module_num:8|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Operation:Subtract
@@ -152,7 +152,7 @@ ImageMath:[module_num:9|svn_version:'Unknown'|variable_revision_number:5|show_wi
     Measurement:Intensity_Percentile_5_plasmidStar_raw
 
 IdentifyPrimaryObjects:[module_num:10|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find GCs using NPM1 image']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:GC
+    Select the input image:NPM1
     Name the primary objects to be identified:GC
     Typical diameter of objects, in pixel units (Min,Max):50,300
     Discard objects outside the diameter range?:Yes
@@ -193,7 +193,7 @@ MeasureObjectSizeShape:[module_num:11|svn_version:'Unknown'|variable_revision_nu
     Calculate the advanced features?:No
 
 MeasureObjectIntensity:[module_num:12|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Measure intensities in each GC']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
-    Select images to measure:DFC, FiveETS, plasmidStar
+    Select images to measure:FiveETS, NOP56, plasmidStar
     Select objects to measure:GC
 
 ConvertObjectsToImage:[module_num:13|svn_version:'Unknown'|variable_revision_number:1|show_window:True|notes:['Convert GC to a binary image for intensity distribution measurement']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
@@ -203,7 +203,7 @@ ConvertObjectsToImage:[module_num:13|svn_version:'Unknown'|variable_revision_num
     Select the colormap:Default
 
 MeasureObjectIntensityDistribution:[module_num:14|svn_version:'Unknown'|variable_revision_number:6|show_window:True|notes:['Measure DFC and GC binary intensity for calculating a rim score']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC, GCObjectImage
+    Select images to measure:GCObjectImage, NOP56
     Hidden:1
     Hidden:1
     Hidden:0
@@ -222,7 +222,7 @@ DilateObjects:[module_num:15|svn_version:'Unknown'|variable_revision_number:1|sh
     Structuring element:disk,10
 
 MeasureColocalization:[module_num:16|svn_version:'Unknown'|variable_revision_number:5|show_window:True|notes:["Measure correlation between DFC, 5'-ETS, GC, and plasmid."]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC, FiveETS, GC, plasmidStar
+    Select images to measure:FiveETS, NOP56, NPM1, plasmidStar
     Set threshold as percentage of maximum intensity for the images:15.0
     Select where to measure correlation:Within objects
     Select objects to measure:DilatedGC

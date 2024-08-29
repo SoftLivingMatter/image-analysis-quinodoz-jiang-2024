@@ -76,19 +76,19 @@ ColorToGray:[module_num:5|svn_version:'Unknown'|variable_revision_number:4|show_
     Channel count:4
     Channel number:1
     Relative weight of the channel:1.0
-    Image name:GC_Raw
+    Image name:NPM1_Raw
     Channel number:2
     Relative weight of the channel:1.0
-    Image name:DFC_Raw
+    Image name:NOP56_Raw
     Channel number:3
     Relative weight of the channel:1.0
-    Image name:star18S_Raw
+    Image name:starPlasmid_Raw
     Channel number:4
     Relative weight of the channel:1.0
-    Image name:IF_Raw
+    Image name:PF_Raw
 
 MeasureImageIntensity:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure 5 percentile intensity for background subtraction.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC_Raw, GC_Raw, IF_Raw, star18S_Raw
+    Select images to measure:NOP56_Raw, NPM1_Raw, PF_Raw, starPlasmid_Raw
     Measure the intensity only from areas enclosed by objects?:No
     Select input object sets:
     Calculate custom percentiles:Yes
@@ -103,15 +103,15 @@ ImageMath:[module_num:7|svn_version:'Unknown'|variable_revision_number:5|show_wi
     Set values greater than 1 equal to 1?:Yes
     Replace invalid values with 0?:Yes
     Ignore the image masks?:No
-    Name the output image:DFC
+    Name the output image:NOP56
     Image or measurement?:Image
-    Select the first image:DFC_Raw
+    Select the first image:NOP56_Raw
     Multiply the first image by:1.0
     Measurement:
     Image or measurement?:Measurement
     Select the second image:None
     Multiply the second image by:1.0
-    Measurement:Intensity_Percentile_5_DFC_Raw
+    Measurement:Intensity_Percentile_5_NOP56_Raw
 
 ImageMath:[module_num:8|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Operation:Subtract
@@ -122,15 +122,15 @@ ImageMath:[module_num:8|svn_version:'Unknown'|variable_revision_number:5|show_wi
     Set values greater than 1 equal to 1?:Yes
     Replace invalid values with 0?:Yes
     Ignore the image masks?:No
-    Name the output image:GC
+    Name the output image:NPM1
     Image or measurement?:Image
-    Select the first image:GC_Raw
+    Select the first image:NPM1_Raw
     Multiply the first image by:1.0
     Measurement:
     Image or measurement?:Measurement
     Select the second image:None
     Multiply the second image by:1.0
-    Measurement:Intensity_Percentile_5_GC_Raw
+    Measurement:Intensity_Percentile_5_NPM1_Raw
 
 ImageMath:[module_num:9|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Operation:Subtract
@@ -141,15 +141,15 @@ ImageMath:[module_num:9|svn_version:'Unknown'|variable_revision_number:5|show_wi
     Set values greater than 1 equal to 1?:Yes
     Replace invalid values with 0?:Yes
     Ignore the image masks?:No
-    Name the output image:IF
+    Name the output image:PF
     Image or measurement?:Image
-    Select the first image:IF_Raw
+    Select the first image:PF_Raw
     Multiply the first image by:1.0
     Measurement:
     Image or measurement?:Measurement
     Select the second image:None
     Multiply the second image by:1.0
-    Measurement:Intensity_Percentile_5_IF_Raw
+    Measurement:Intensity_Percentile_5_PF_Raw
 
 ImageMath:[module_num:10|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Operation:Subtract
@@ -160,23 +160,23 @@ ImageMath:[module_num:10|svn_version:'Unknown'|variable_revision_number:5|show_w
     Set values greater than 1 equal to 1?:Yes
     Replace invalid values with 0?:Yes
     Ignore the image masks?:No
-    Name the output image:star18S
+    Name the output image:starPlasmid
     Image or measurement?:Image
-    Select the first image:star18S_Raw
+    Select the first image:starPlasmid_Raw
     Multiply the first image by:1.0
     Measurement:
     Image or measurement?:Measurement
     Select the second image:None
     Multiply the second image by:1.0
-    Measurement:Intensity_Percentile_5_star18S_Raw
+    Measurement:Intensity_Percentile_5_starPlasmid_Raw
 
 GaussianFilter:[module_num:11|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:['Blur DFC image to improve finding the nucleolus from this semi-punctate structure.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
-    Select the input image:DFC
-    Name the output image:DFCFiltered
+    Select the input image:NOP56
+    Name the output image:NOP56Filtered
     Sigma:5
 
 IdentifyPrimaryObjects:[module_num:12|svn_version:'Unknown'|variable_revision_number:15|show_window:False|notes:['Find nulceoli from blurred DFC image.  Unable to use GC since we want to measure colocalization of GC with other markers where GC may be absent.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:DFCFiltered
+    Select the input image:NOP56Filtered
     Name the primary objects to be identified:InitialNucleoli
     Typical diameter of objects, in pixel units (Min,Max):10,150
     Discard objects outside the diameter range?:Yes
@@ -236,7 +236,7 @@ MeasureRdf:[module_num:15|svn_version:'Unknown'|variable_revision_number:1|show_
     Consider rdf from point:No
 
 MeasureObjectIntensity:[module_num:16|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure intensity of each channel in the interior and rim.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:DFC, GC, IF, star18S
+    Select images to measure:NOP56, NPM1, PF, starPlasmid
     Select objects to measure:InitialNucleoli, NucleoplasmRim
 
 MeasureObjectSizeShape:[module_num:17|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Measure sizes of nucleolus.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
@@ -262,7 +262,7 @@ ExportToSpreadsheet:[module_num:19|svn_version:'Unknown'|variable_revision_numbe
     Calculate the per-image mean values for object measurements?:No
     Calculate the per-image median values for object measurements?:No
     Calculate the per-image standard deviation values for object measurements?:No
-    Output file location:Default Output Folder|SSU_test
+    Output file location:Default Output Folder|
     Create a GenePattern GCT file?:No
     Select source of sample row name:Metadata
     Select the image to use as the identifier:None

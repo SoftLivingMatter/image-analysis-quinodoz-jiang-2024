@@ -76,19 +76,19 @@ ColorToGray:[module_num:5|svn_version:'Unknown'|variable_revision_number:4|show_
     Channel count:4
     Channel number:1
     Relative weight of the channel:1.0
-    Image name:plasmid_28S
+    Image name:endogenous_28S
     Channel number:2
     Relative weight of the channel:1.0
-    Image name:DFC
+    Image name:NOP56
     Channel number:3
     Relative weight of the channel:1.0
     Image name:plasmid_star_raw
     Channel number:4
     Relative weight of the channel:1.0
-    Image name:GC
+    Image name:NPM1
 
 RunCellpose:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Find nulcei from the inverted, 28S intensity image.  28S accumulates in the cytoplasm, which highlights nuclei upon inversion.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:plasmid_28S
+    Select the input image:endogenous_28S
     Run CellPose in docker or local python environment:Python
     Select Cellpose docker image:cellprofiler/runcellpose_with_pretrained:0.1
     Expected object diameter:300
@@ -113,7 +113,7 @@ RunCellpose:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_
     Remove objects that are touching the edge?:Yes
 
 RunCellpose:[module_num:7|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Find cytoplasm from the 28S image directly.  Functions well if cells are separated or have higher cytoplasmic intensity']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select the input image:plasmid_28S
+    Select the input image:endogenous_28S
     Run CellPose in docker or local python environment:Python
     Select Cellpose docker image:cellprofiler/runcellpose_with_pretrained:0.1
     Expected object diameter:500
@@ -197,7 +197,7 @@ ImageMath:[module_num:12|svn_version:'Unknown'|variable_revision_number:5|show_w
     Measurement:Intensity_Percentile_5_plasmid_star_raw
 
 MeasureObjectIntensity:[module_num:13|svn_version:'Unknown'|variable_revision_number:4|show_window:True|notes:['Measure the 28S and star plasmid intensity values in the entire cell, cytoplasm, and nucleus.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select images to measure:plasmid_28S, plasmid_star
+    Select images to measure:endogenous_28S, plasmid_star
     Select objects to measure:Cell, Cytoplasm, Nuclei
 
 RelateObjects:[module_num:14|svn_version:'Unknown'|variable_revision_number:5|show_window:True|notes:['Relate the nuclei to the parent cell.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
