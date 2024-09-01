@@ -92,9 +92,10 @@ class CellProfilerParser():
 
 
 class CorrelationParser(CellProfilerParser):
-    def __init__(self, measures):
+    def __init__(self, measures, reduce=False):
         self.columns = []
         self.measures = measures
+        self.reduce = reduce
 
     def peek_file(self, datafile):
         measures = tuple(f'Correlation_{measure}' for measure in self.measures)
@@ -104,7 +105,7 @@ class CorrelationParser(CellProfilerParser):
         ]
 
     def get_columns(self) -> list[str]:
-        return self.columns +  ['AreaShape_Area']
+        return self.columns + (['AreaShape_Area'] if self.reduce else [])
 
     def merge_result(self, result, df, region, merge_fcn):
         map_cols = {
