@@ -50,7 +50,7 @@ def analyze(
     extra_data = []
     for parser in parsers:
         extra = parser.analyze(data)
-        if extra:
+        if extra is not None:
             extra_data.append(extra)
 
     if previous_result is not None and merge_fcn:
@@ -91,6 +91,47 @@ class CellProfilerParser():
         pass
 
 
+class RDFParser(CellProfilerParser):
+    def __init__(self, id_vars=[]):
+        self.columns = []
+        self.id_vars = id_vars
+
+    def peek_file(self, datafile):
+        self.columns = [
+            column for column in open(datafile).readline().strip().split(',')
+                if column.startswith('RDF_')
+        ]
+
+    def get_columns(self) -> list[str]:
+        return self.columns + self.id_vars
+
+    def analyze(self, df) -> pd.DataFrame | None:
+        rdf_raw = df.melt(id_vars=self.id_vars)
+
+        intensity = rdf_raw[rdf_raw.variable.str.startswith('RDF_Intensity')].reset_index(drop=True)
+        extract = intensity.variable.str.extract(r'RDF_Intensity_C(\d)_R([-0-9]+)')
+        intensity = intensity.assign(
+            channel=extract[0].astype(int),
+            radius=extract[1].astype(int),
+        ).rename(columns={'value': 'intensity'}).drop(columns='variable')
+
+        counts = rdf_raw[rdf_raw.variable.str.startswith('RDF_Count')].reset_index(drop=True)
+        extract = counts.variable.str.extract(r'RDF_Counts_R([-0-9]+)')
+
+        counts = counts.assign(
+            radius=extract[0].astype(int)
+        ).rename(columns={'value': 'counts'}).drop(columns='variable')
+
+        return intensity.merge(counts, on=self.id_vars + ['radius'])
+
+
+    def merge_result(self, result, df, region, merge_fcn):
+        return result
+
+    def merge_reduced_result(self, result, df, region, merge_fcn):
+        return result
+
+
 class CorrelationParser(CellProfilerParser):
     def __init__(self, measures, reduce=False):
         self.columns = []
@@ -100,7 +141,7 @@ class CorrelationParser(CellProfilerParser):
     def peek_file(self, datafile):
         measures = tuple(f'Correlation_{measure}' for measure in self.measures)
         self.columns = [
-            column for column in open(datafile).readline().split(',')
+            column for column in open(datafile).readline().strip().split(',')
             if column.startswith(measures)
         ]
 
