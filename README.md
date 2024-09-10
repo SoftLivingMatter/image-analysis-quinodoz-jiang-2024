@@ -26,7 +26,7 @@ pip install cellpose==2.3.2
 wget -O plugins/runcellpose.py \
   https://raw.githubusercontent.com/CellProfiler/CellProfiler-plugins/b928c0bc980d953d74e1f4a1f39641495f6fdf57/active_plugins/runcellpose.py
 ```
-
+Installation should take a few minutes to complete.
 Start cellprofiler and set the plugin directory to the provided plugins directory
 of this repo, which contains custom plugins for performing rdf analysis.
 
@@ -35,6 +35,8 @@ The provided cellprofiler pipelines can be run interactively or headless with
 your own image datasets.  Once completed, start jupyter lab and open the corresponding
 notebook.  You should only have to update the cellprofiler output directory
 location and regex expression to parse experimental values from the filenames.
+The expected outputs are a series of pandas dataframes which can be further processed,
+plotted, or exported for followup analysis.
 
 ## Additional information
 This repo is a record of analyses and will only be updated if additional information
