@@ -16,7 +16,7 @@ notebooks depend on the `notebooks/utils.py` file.
 ```bash
 # install dependencies for notebooks and cellprofiler version 4.2.6
 conda create -c conda-forge -n cellprofiler python=3.8 \
-  mysqlclient=1.4.6 nummpy=1.24.4 python-javabridge wxPython=4.2.0 \
+  mysqlclient=1.4.6 numpy=1.24.4 python-javabridge wxPython=4.2.0 \
   jupyterlab seaborn pandas
 conda activate cellprofiler
 pip install cellprofiler==4.2.6
