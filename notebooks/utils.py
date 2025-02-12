@@ -169,11 +169,12 @@ class CorrelationParser(CellProfilerParser):
 
 
 class RimEnrichmentParser(CellProfilerParser):
-    def __init__(self, images: list, area_normalization, bins, total_bins):
+    def __init__(self, images: list, area_normalization, bins, total_bins, ignore_last=0):
         self.images = images
         self.area_normalization = area_normalization
         self.bins = bins
         self.total_bins = total_bins
+        self.ignore_last = ignore_last
 
 
     def _bins(self):
@@ -181,7 +182,7 @@ class RimEnrichmentParser(CellProfilerParser):
 
     def get_columns(self) -> list[str]:
         return [
-            f'RadialDistribution_FracAtD_{image}_{bin}of{self.total_bins}'
+            f'RadialDistribution_FracAtD_{image}_{bin - self.ignore_last}of{self.total_bins}'
             for image in (self.images + [self.area_normalization])
             for bin in self._bins()
         ]
@@ -189,13 +190,13 @@ class RimEnrichmentParser(CellProfilerParser):
     def analyze(self, df) -> pd.DataFrame | None:
         relative_area = df[[
             f'RadialDistribution_FracAtD_{self.area_normalization}'
-            f'_{bin}of{self.total_bins}'
+            f'_{bin - self.ignore_last}of{self.total_bins}'
                 for bin in self._bins()
         ]].sum(axis=1)
 
         for image in self.images:
             df[f'{image}_Rim_Enrichment'] = df[[
-                f'RadialDistribution_FracAtD_{image}_{bin}of{self.total_bins}'
+                f'RadialDistribution_FracAtD_{image}_{bin - self.ignore_last}of{self.total_bins}'
                 for bin in self._bins()
             ]].sum(axis=1) / relative_area
 
