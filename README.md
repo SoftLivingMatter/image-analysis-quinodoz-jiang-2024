@@ -1,4 +1,5 @@
 # Image analysis for Quinodoz and Jiang, 2024
+[![DOI](https://zenodo.org/badge/848818846.svg)](https://doi.org/10.5281/zenodo.14908467)
 
 Cellprofiler pipelines and jupyter notebooks for replicating quantitative
 image analyses in Quinodoz and Jiang, 2024.  Since the cellprofiler settings
