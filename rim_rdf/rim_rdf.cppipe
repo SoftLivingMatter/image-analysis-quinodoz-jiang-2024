@@ -76,7 +76,7 @@ ColorToGray:[module_num:5|svn_version:'Unknown'|variable_revision_number:4|show_
     Channel count:4
     Channel number:1
     Relative weight of the channel:1.0
-    Image name:NPM1_Raw
+    Image name:PF_Raw
     Channel number:2
     Relative weight of the channel:1.0
     Image name:NOP56_Raw
@@ -85,7 +85,7 @@ ColorToGray:[module_num:5|svn_version:'Unknown'|variable_revision_number:4|show_
     Image name:starPlasmid_Raw
     Channel number:4
     Relative weight of the channel:1.0
-    Image name:PF_Raw
+    Image name:NPM1_Raw
 
 MeasureImageIntensity:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:['Measure 5 percentile intensity for background subtraction.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select images to measure:NOP56_Raw, NPM1_Raw, PF_Raw, starPlasmid_Raw

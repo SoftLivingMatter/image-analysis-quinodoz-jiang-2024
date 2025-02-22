@@ -8,7 +8,7 @@ HasImagePlaneDetails:False
 Images:[module_num:1|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['To begin creating your project, use the Images module to compile a list of files and/or folders that you want to analyze. You can also specify a set of rules to include only the desired files in your selected folders.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     :
     Filter images?:Custom
-    Select the rule criteria:and (extension does isimage) (file does endwith ".nd2")
+    Select the rule criteria:and (extension does isimage) (directory doesnot containregexp "[\\\\/]\\.")
 
 Metadata:[module_num:2|svn_version:'Unknown'|variable_revision_number:6|show_window:False|notes:['The Metadata module optionally allows you to extract information describing your images (i.e, metadata) which will be stored along with your measurements. This information can be contained in the file name and/or location, or in an external file.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Extract metadata?:Yes
@@ -95,13 +95,13 @@ ColorToGray:[module_num:6|svn_version:'Unknown'|variable_revision_number:4|show_
     Image name:Probe
     Channel number:2
     Relative weight of the channel:1.0
-    Image name:NOP56
+    Image name:RPA194
     Channel number:3
     Relative weight of the channel:1.0
-    Image name:RPA194
+    Image name:NPM1
     Channel number:4
     Relative weight of the channel:1.0
-    Image name:NPM1
+    Image name:NOP56
 
 IdentifyPrimaryObjects:[module_num:7|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find GC within the input image.  Parameters tuned to pick out GC with varying intensity across cells.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:NPM1

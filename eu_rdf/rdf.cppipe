@@ -2,7 +2,7 @@ CellProfiler Pipeline: http://www.cellprofiler.org
 Version:5
 DateRevision:426
 GitHash:
-ModuleCount:17
+ModuleCount:19
 HasImagePlaneDetails:False
 
 Images:[module_num:1|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['To begin creating your project, use the Images module to compile a list of files and/or folders that you want to analyze. You can also specify a set of rules to include only the desired files in your selected folders.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
@@ -152,20 +152,27 @@ SplitOrMergeObjects:[module_num:8|svn_version:'Unknown'|variable_revision_number
     Select the parent object:None
     Output object type:Disconnected
 
-DilateObjects:[module_num:9|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:['Dilate GC to pick out FCs outside of GC']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+DilateObjects:[module_num:9|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:['Dilate GC to pick out FCs outside of GC']|batch_state:array([], dtype=uint8)|enabled:False|wants_pause:False]
     Select the input object:MergedGC
     Name the output object:DilatedGC
     Structuring element:disk,50
 
-MaskImage:[module_num:10|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Mask FC image with dilated GC mask.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+ErodeObjects:[module_num:10|svn_version:'Unknown'|variable_revision_number:1|show_window:True|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input object:InitialGC
+    Name the output object:ErodedGC
+    Structuring element:disk,10
+    Prevent object removal:Yes
+    Relabel resulting objects:No
+
+MaskImage:[module_num:11|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Mask FC image with dilated GC mask.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:RPA194
     Name the output image:MaskRPA194
     Use objects or an image as a mask?:Objects
-    Select object for mask:DilatedGC
+    Select object for mask:InitialGC
     Select image for mask:None
     Invert the mask?:No
 
-EnhanceOrSuppressFeatures:[module_num:11|svn_version:'Unknown'|variable_revision_number:7|show_window:False|notes:['Highlight FCs with diameter around 20 pixels, improves FC finding in next step.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+EnhanceOrSuppressFeatures:[module_num:12|svn_version:'Unknown'|variable_revision_number:7|show_window:False|notes:['Highlight FCs with diameter around 20 pixels, improves FC finding in next step.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:MaskRPA194
     Name the output image:EnhancedRPA194
     Select the operation:Enhance
@@ -179,7 +186,7 @@ EnhanceOrSuppressFeatures:[module_num:11|svn_version:'Unknown'|variable_revision
     Speed and accuracy:Fast
     Rescale result image:No
 
-IdentifyPrimaryObjects:[module_num:12|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find FCs.  Parameters adjusted to pick out most in plane FCs']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+IdentifyPrimaryObjects:[module_num:13|svn_version:'Unknown'|variable_revision_number:15|show_window:True|notes:['Find FCs.  Parameters adjusted to pick out most in plane FCs']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:EnhancedRPA194
     Name the primary objects to be identified:InitialFC
     Typical diameter of objects, in pixel units (Min,Max):7,50
@@ -215,23 +222,13 @@ IdentifyPrimaryObjects:[module_num:12|svn_version:'Unknown'|variable_revision_nu
     # of deviations:2.0
     Thresholding method:Otsu
 
-MeasureObjectSizeShape:[module_num:13|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Measure sizes and shapes of nearly all objects']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+MeasureObjectSizeShape:[module_num:14|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:['Measure sizes and shapes of nearly all objects']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select object sets to measure:InitialFC, InitialGC, MergedGC
     Calculate the Zernike features?:No
     Calculate the advanced features?:No
 
-RelateObjects:[module_num:14|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:['Relate all objects back to merged GC for analysis']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Parent objects:DilatedGC
-    Child objects:InitialGC
-    Calculate child-parent distances?:None
-    Calculate per-parent means for all child measurements?:No
-    Calculate distances to other parents?:No
-    Do you want to save the children with parents as a new object set?:No
-    Name the output object:RelateObjects
-    Parent name:None
-
 RelateObjects:[module_num:15|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Parent objects:DilatedGC
+    Parent objects:MergedGC
     Child objects:InitialFC
     Calculate child-parent distances?:None
     Calculate per-parent means for all child measurements?:No
@@ -240,15 +237,35 @@ RelateObjects:[module_num:15|svn_version:'Unknown'|variable_revision_number:5|sh
     Name the output object:RelateObjects
     Parent name:None
 
-MeasureRdf:[module_num:16|svn_version:'Unknown'|variable_revision_number:1|show_window:True|notes:['Measure RDF of each FC as a point source.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+RelateObjects:[module_num:16|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Parent objects:MergedGC
+    Child objects:InitialGC
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:No
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:RelateObjects
+    Parent name:None
+
+RelateObjects:[module_num:17|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+    Parent objects:MergedGC
+    Child objects:ErodedGC
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:No
+    Calculate distances to other parents?:No
+    Do you want to save the children with parents as a new object set?:No
+    Name the output object:RelateObjects
+    Parent name:None
+
+MeasureRdf:[module_num:18|svn_version:'Unknown'|variable_revision_number:1|show_window:True|notes:['Measure RDF of each FC as a point source.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Input image:Input
     Input objects:InitialFC
-    Object masks:InitialGC
+    Object masks:ErodedGC
     RDF radius:26
     Channels:1,2,3,4
     Consider rdf from point:Yes
 
-ExportToSpreadsheet:[module_num:17|svn_version:'Unknown'|variable_revision_number:13|show_window:False|notes:['']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+ExportToSpreadsheet:[module_num:19|svn_version:'Unknown'|variable_revision_number:13|show_window:False|notes:['']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
     Select the column delimiter:Comma (",")
     Add image metadata columns to your object data file?:No
     Add image file and folder names to your object data file?:No
